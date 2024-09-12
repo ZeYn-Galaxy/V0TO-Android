@@ -11,17 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,18 +31,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.wandev.v0to.R
+import com.wandev.v0to.services.ApiService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var context = LocalContext.current
     var email by remember {
-        mutableStateOf("")
+        mutableStateOf("mahdi@gmail.com")
     }
     var password by remember {
-        mutableStateOf("")
+        mutableStateOf("1234")
     }
 
     var clicked by remember {
@@ -64,13 +66,8 @@ fun LoginScreen(navController: NavHostController) {
         if (password.isBlank()) {
             return@LaunchedEffect Toast.makeText(context, "Password required", Toast.LENGTH_SHORT).show()
         }
-
-        navController.navigate("home") {
-            launchSingleTop = true
-            restoreState = true
-            popUpTo(navController.graph.startDestinationId) {
-                inclusive = true
-            }
+        GlobalScope.launch {
+            ApiService.login(context, email, password, navController)
         }
     }
 

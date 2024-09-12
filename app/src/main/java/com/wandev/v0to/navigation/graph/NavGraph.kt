@@ -9,7 +9,7 @@ import com.wandev.v0to.navigation.views.LoginScreen
 
 @Composable
 fun globalGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = "home" ) {
+    NavHost(navController = navHostController, startDestination = "login" ) {
         composable("login") {
             LoginScreen(navHostController)
         }
