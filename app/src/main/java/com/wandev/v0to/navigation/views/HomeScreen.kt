@@ -2,6 +2,7 @@ package com.wandev.v0to.navigation.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.wandev.v0to.R
 import com.wandev.v0to.models.Camera
+import com.wandev.v0to.models.Category
 import com.wandev.v0to.services.ApiService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -61,10 +64,12 @@ fun HomeScreen(navController: NavHostController) {
     }
 
     var selectedOption by remember {
-        mutableStateOf("")
+        mutableStateOf(Category(-1, ""))
     }
 
-    var options = listOf("Option 1", "Option 2", "Option 3")
+    var options by remember {
+        mutableStateOf(emptyList<Category>())
+    }
 
     var search by remember {
         mutableStateOf("")
@@ -74,10 +79,23 @@ fun HomeScreen(navController: NavHostController) {
         mutableStateOf(emptyList<Camera>())
     }
 
+    LaunchedEffect(selectedOption) {
+        GlobalScope.launch {
+            cameraLists = ApiService.getCamera(selectedOption.id, null)
+        }
+    }
+
+    LaunchedEffect(search) {
+        GlobalScope.launch {
+            cameraLists = ApiService.getCamera(null, search)
+        }
+    }
+
 
     LaunchedEffect(Unit) {
         GlobalScope.launch {
-            cameraLists = ApiService.getCamera()
+            cameraLists = ApiService.getCamera(null, null)
+            options = ApiService.getCategory()
         }
     }
 
@@ -136,7 +154,7 @@ fun HomeScreen(navController: NavHostController) {
                             readOnly = true,
                             modifier = Modifier
                                 .menuAnchor(),
-                            value = selectedOption,
+                            value = selectedOption.name,
                             onValueChange = {},
                             keyboardOptions = KeyboardOptions().copy(
                                 imeAction = ImeAction.Done
@@ -154,9 +172,9 @@ fun HomeScreen(navController: NavHostController) {
                             options.forEach { option ->
                                 DropdownMenuItem(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = { Text(option) },
+                                    text = { Text(option.name) },
                                     onClick = {
-                                        selectedOption = option
+                                        selectedOption = Category(option.id, option.name)
                                         expanded = false
                                     })
                             }
@@ -183,6 +201,19 @@ fun HomeScreen(navController: NavHostController) {
             }
         }
 
+        if (cameraLists.isEmpty()) {
+            item {
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = "Not found",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    modifier = Modifier.fillMaxWidth().padding(top = 15.dp)
+                )
+            }
+        }
+
         item {
             LazyVerticalGrid(
                 userScrollEnabled = true,
@@ -197,6 +228,12 @@ fun HomeScreen(navController: NavHostController) {
                     Box(
                         modifier = Modifier
                             .background(colorResource(id = R.color.background))
+                            .clickable {
+                                navController.navigate("detail/${item.id}") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                     ) {
                         Column {
                             Image(

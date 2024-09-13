@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.wandev.v0to.navigation.views.DetailScreen
 import com.wandev.v0to.navigation.views.HomeScreen
 import com.wandev.v0to.navigation.views.LoginScreen
 
@@ -15,6 +16,10 @@ fun globalGraph(navHostController: NavHostController) {
         }
         composable("home") {
             HomeScreen(navHostController)
+        }
+        composable("detail/{id}") {
+            val id = it.arguments?.getString("id")
+            DetailScreen(navHostController, id = id!!)
         }
     }
 }
