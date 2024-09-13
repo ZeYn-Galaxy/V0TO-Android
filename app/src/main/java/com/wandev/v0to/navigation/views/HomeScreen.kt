@@ -55,6 +55,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
@@ -263,7 +264,7 @@ fun HomeScreen(navController: NavHostController) {
                                 modifier = Modifier.padding(start = 15.dp, end = 15.dp)
                             )
                             Text(
-                                text = item.price.toString(),
+                                text = "Rp" + NumberFormat.getIntegerInstance().format(item.price) + ",-",
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,

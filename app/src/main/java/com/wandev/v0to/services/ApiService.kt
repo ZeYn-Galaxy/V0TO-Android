@@ -69,7 +69,7 @@ object ApiService {
                     it.getString("autoFocusSystem"),
                     it.getString("isoRange"),
                     it.getString("shuterSpeedRange"),
-                    it.getString("dimension"),
+                    it.getString("dimensions"),
                     it.getInt("weight"),
                     it.getBoolean("wiFi"),
                     it.getBoolean("touchScreen"),
