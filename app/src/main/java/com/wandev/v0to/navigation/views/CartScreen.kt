@@ -93,7 +93,7 @@ fun CartScreen(navController : NavHostController) {
 
             }
 
-            Column (modifier = Modifier.padding(start = 30.dp)) {
+            Column (modifier = Modifier.padding(start = 30.dp, bottom = 60.dp)) {
                 ApiService.cartList.filter { it.sellerShop == item.sellerShop }.forEach { camera ->
                     var checked by remember {
                         mutableStateOf(false)
@@ -190,24 +190,27 @@ fun CartScreen(navController : NavHostController) {
             }
         }
 
-        item {
+        if (ApiService.cartList.isNotEmpty()) {
+            item {
 
-            Box (modifier = Modifier.heightIn(min = 500.dp)) {
-                Column (
-                    modifier = Modifier.align(Alignment.BottomEnd)
-                ) {
-                    Text(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        text = "Total: Rp" + NumberFormat.getIntegerInstance().format(totalPrice) + ",-")
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(id = R.color.secondary)
-                        ),
-                        onClick = {}) {
-                        Text(text = "Checkout", color = colorResource(id = R.color.primary))
+                Box (modifier = Modifier.heightIn(min = 370.dp)) {
+                    Column (
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 15.dp),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp,
+                            color = Color.White,
+                            text = "Total: Rp" + NumberFormat.getIntegerInstance().format(totalPrice) + ",-")
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(id = R.color.secondary)
+                            ),
+                            onClick = {}) {
+                            Text(text = "Checkout", color = colorResource(id = R.color.primary))
+                        }
                     }
                 }
             }
