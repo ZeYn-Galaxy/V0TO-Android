@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.wandev.v0to.R
 import com.wandev.v0to.models.CameraDetail
+import com.wandev.v0to.models.Cart
 import com.wandev.v0to.services.ApiService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -286,7 +287,25 @@ fun DetailScreen(navController: NavHostController, id: String) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 15.dp),
-                        onClick = { },
+                        onClick = {
+                                  val newCart = Cart(
+                                      camera!!.id,
+                                      camera!!.name,
+                                      camera!!.sellerShop,
+                                      camera!!.photo,
+                                      1,
+                                      camera!!.price
+                                  )
+
+                            ApiService.cartList.add(newCart)
+                            navController.navigate("cart") {
+                                launchSingleTop = true
+                                restoreState = true
+                                popUpTo("home") {
+                                    inclusive = false
+                                }
+                            }
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(id = R.color.secondary)
                         )) {

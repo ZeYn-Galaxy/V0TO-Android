@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.navigation.NavHostController
 import com.wandev.v0to.models.Camera
 import com.wandev.v0to.models.CameraDetail
+import com.wandev.v0to.models.Cart
 import com.wandev.v0to.models.Category
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,6 +18,8 @@ import java.net.URL
 object ApiService {
     const val http = "http://10.0.2.2:5000/api"
     var key = ""
+
+    var cartList = ArrayList<Cart>(arrayListOf())
 
     fun getCategory() : List<Category> {
         val connection = URL("${http}/category").openConnection() as HttpURLConnection

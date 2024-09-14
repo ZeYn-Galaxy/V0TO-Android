@@ -126,7 +126,13 @@ fun HomeScreen(navController: NavHostController) {
                         contentDescription = ""
                     )
                     Image(
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier.size(40.dp)
+                            .clickable {
+                                       navController.navigate("cart") {
+                                           launchSingleTop = true
+                                           restoreState = true
+                                       }
+                            },
                         painter = painterResource(id = R.drawable.baseline_shopping_bag_24),
                         contentDescription = ""
                     )
