@@ -208,7 +208,12 @@ fun CartScreen(navController : NavHostController) {
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = colorResource(id = R.color.secondary)
                             ),
-                            onClick = {}) {
+                            onClick = {
+                                navController.navigate("checkout") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }) {
                             Text(text = "Checkout", color = colorResource(id = R.color.primary))
                         }
                     }

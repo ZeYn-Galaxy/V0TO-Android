@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.wandev.v0to.navigation.views.CartScreen
+import com.wandev.v0to.navigation.views.CheckoutScreen
 import com.wandev.v0to.navigation.views.DetailScreen
 import com.wandev.v0to.navigation.views.HomeScreen
 import com.wandev.v0to.navigation.views.LoginScreen
@@ -24,6 +25,10 @@ fun globalGraph(navHostController: NavHostController) {
         }
         composable("cart") {
             CartScreen(navHostController)
+        }
+
+        composable("checkout") {
+            CheckoutScreen(navHostController)
         }
     }
 }
