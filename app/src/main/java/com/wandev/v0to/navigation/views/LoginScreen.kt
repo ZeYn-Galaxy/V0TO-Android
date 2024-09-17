@@ -35,12 +35,8 @@ import androidx.navigation.NavHostController
 import com.wandev.v0to.R
 import com.wandev.v0to.services.ApiService
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
@@ -58,13 +54,17 @@ fun LoginScreen(navController: NavHostController) {
     }
 
     LaunchedEffect(clicked) {
-        if (clicked == 0) { return@LaunchedEffect }
+        if (clicked == 0) {
+            return@LaunchedEffect
+        }
         if (email.isBlank()) {
-            return@LaunchedEffect Toast.makeText(context, "Email required", Toast.LENGTH_SHORT).show()
+            return@LaunchedEffect Toast.makeText(context, "Email required", Toast.LENGTH_SHORT)
+                .show()
         }
 
         if (password.isBlank()) {
-            return@LaunchedEffect Toast.makeText(context, "Password required", Toast.LENGTH_SHORT).show()
+            return@LaunchedEffect Toast.makeText(context, "Password required", Toast.LENGTH_SHORT)
+                .show()
         }
         GlobalScope.launch {
             ApiService.login(context, email, password, navController)
@@ -75,13 +75,18 @@ fun LoginScreen(navController: NavHostController) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.primary))) {
-
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(id = R.drawable.logo_voto), contentDescription = "",
+            .background(colorResource(id = R.color.primary))
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_voto), contentDescription = "",
                 modifier = Modifier
                     .width(150.dp)
-                    .height(150.dp))
+                    .height(150.dp)
+            )
 
             OutlinedTextField(
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -91,12 +96,13 @@ fun LoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .padding(start = 30.dp, end = 30.dp),
                 value = email,
-                onValueChange = {email = it},
+                onValueChange = { email = it },
                 label = { Text(text = "Email") },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White
-                ))
+                )
+            )
 
             OutlinedTextField(
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -107,13 +113,14 @@ fun LoginScreen(navController: NavHostController) {
                     .padding(top = 15.dp, start = 30.dp, end = 30.dp),
                 value = password,
                 visualTransformation = PasswordVisualTransformation(),
-                onValueChange = {password = it},
+                onValueChange = { password = it },
                 label = { Text(text = "Password") },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
-                ))
-            
+                )
+            )
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
