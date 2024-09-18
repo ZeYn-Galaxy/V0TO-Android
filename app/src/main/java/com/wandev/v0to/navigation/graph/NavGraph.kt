@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.wandev.v0to.navigation.views.CartScreen
 import com.wandev.v0to.navigation.views.CheckoutScreen
 import com.wandev.v0to.navigation.views.DetailScreen
+import com.wandev.v0to.navigation.views.HistoryScreen
 import com.wandev.v0to.navigation.views.HomeScreen
 import com.wandev.v0to.navigation.views.LoginScreen
 
@@ -29,6 +30,10 @@ fun globalGraph(navHostController: NavHostController) {
 
         composable("checkout") {
             CheckoutScreen(navHostController)
+        }
+
+        composable("history") {
+            HistoryScreen(navHostController)
         }
     }
 }

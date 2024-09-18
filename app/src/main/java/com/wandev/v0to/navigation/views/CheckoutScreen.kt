@@ -1,5 +1,6 @@
 package com.wandev.v0to.navigation.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -35,11 +38,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.wandev.v0to.R
+import com.wandev.v0to.models.History
 import com.wandev.v0to.services.ApiService
+import com.wandev.v0to.services.TransactionItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.NumberFormat
+import java.util.ArrayList
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun CheckoutScreen(navController: NavHostController) {
+
+    var context = LocalContext.current
 
     var name by remember {
         mutableStateOf("")
@@ -57,7 +72,49 @@ fun CheckoutScreen(navController: NavHostController) {
         mutableStateOf(false)
     }
 
+    var clicked by remember {
+        mutableStateOf(0)
+    }
 
+    LaunchedEffect(clicked) {
+        if (clicked == 0) {return@LaunchedEffect}
+        if(name.isBlank()) {
+            Toast.makeText(context, "Name is required", Toast.LENGTH_SHORT).show()
+            return@LaunchedEffect
+        }
+
+        if(phone.isBlank()) {
+            Toast.makeText(context, "Phone Number is required", Toast.LENGTH_SHORT).show()
+            return@LaunchedEffect
+        }
+
+        if(address.isBlank()) {
+            Toast.makeText(context, "Address is required", Toast.LENGTH_SHORT).show()
+            return@LaunchedEffect
+        }
+
+        var data = ArrayList<TransactionItem>(arrayListOf())
+        ApiService.cartList.filter { it.checked }.forEach {
+            data.add(TransactionItem(it.id, it.qty, it.price * it.qty))
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val res = ApiService.postTransaction(name, phone, address, data.sumOf { it.subtotal } + 30000, data)
+            if (res == "Success") {
+                withContext(Dispatchers.Main) {
+                    navController.navigate("home") {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
+                    println(res)
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -219,10 +276,7 @@ fun CheckoutScreen(navController: NavHostController) {
                                 containerColor = colorResource(id = R.color.secondary)
                             ),
                             onClick = {
-                                navController.navigate("checkout") {
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                clicked++
                             }) {
                             Text(text = "Checkout", color = colorResource(id = R.color.primary))
                         }

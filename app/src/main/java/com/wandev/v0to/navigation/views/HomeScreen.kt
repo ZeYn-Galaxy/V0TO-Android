@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,7 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -53,7 +49,6 @@ import com.wandev.v0to.models.Category
 import com.wandev.v0to.services.ApiService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 
@@ -105,9 +100,11 @@ fun HomeScreen(navController: NavHostController) {
             .background(colorResource(id = R.color.primary))
             .fillMaxSize()
     )
-    LazyColumn(modifier = Modifier
-        .padding(15.dp)
-        .fillMaxHeight()) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(15.dp)
+            .fillMaxHeight()
+    ) {
         item {
             Row(
                 modifier = Modifier
@@ -126,18 +123,26 @@ fun HomeScreen(navController: NavHostController) {
                         contentDescription = ""
                     )
                     Image(
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier
+                            .size(40.dp)
                             .clickable {
-                                       navController.navigate("cart") {
-                                           launchSingleTop = true
-                                           restoreState = true
-                                       }
+                                navController.navigate("cart") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             },
                         painter = painterResource(id = R.drawable.baseline_shopping_bag_24),
                         contentDescription = ""
                     )
                     Image(
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable {
+                                navController.navigate("history") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
                         painter = painterResource(id = R.drawable.baseline_receipt_long_24),
                         contentDescription = ""
                     )
@@ -216,7 +221,9 @@ fun HomeScreen(navController: NavHostController) {
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    modifier = Modifier.fillMaxWidth().padding(top = 15.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 15.dp)
                 )
             }
         }
@@ -270,7 +277,8 @@ fun HomeScreen(navController: NavHostController) {
                                 modifier = Modifier.padding(start = 15.dp, end = 15.dp)
                             )
                             Text(
-                                text = "Rp" + NumberFormat.getIntegerInstance().format(item.price) + ",-",
+                                text = "Rp" + NumberFormat.getIntegerInstance()
+                                    .format(item.price) + ",-",
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
