@@ -118,7 +118,14 @@ fun HomeScreen(navController: NavHostController) {
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Image(
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clickable {
+                                navController.navigate("event") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
                         painter = painterResource(id = R.drawable.baseline_emoji_events_24),
                         contentDescription = ""
                     )
